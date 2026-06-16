@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Nikato Estudio — Web Express para tu negocio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+
+    :root {
+      --green: #34ECAC;
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --text: #f0f0f0;
+      --muted: #888;
+      --danger: #ff4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .nav-logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+    .nav-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--bg);
+      background: var(--green);
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 72px 24px 64px;
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 24px;
+      display: block;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 8vw, 60px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--green);
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+    .hero-sub strong { color: var(--text); }
+
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--green);
+      color: #000;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 16px 32px;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+      letter-spacing: -0.01em;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-secondary {
+      display: inline-block;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      padding: 14px 32px;
+      border-radius: 6px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--green); color: var(--green); }
+
+    .urgency-note {
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .urgency-note span { color: var(--danger); font-weight: 600; }
+
+    /* DIVIDER */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* SECTION */
+    section {
+      padding: 64px 24px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 16px;
+      display: block;
+    }
+    section h2 {
+      font-size: clamp(26px, 5vw, 38px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      margin-bottom: 32px;
+    }
+    section h2 em {
+      font-style: normal;
+      color: var(--green);
+    }
+
+    /* PAIN POINTS */
+    .pain-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .pain-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .pain-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .pain-item p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .pain-item p strong { color: var(--text); display: block; margin-bottom: 4px; font-size: 15px; }
+
+    /* EJEMPLOS */
+    .examples-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .example-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.15s;
+    }
+    .example-card:hover { border-color: var(--green); }
+    .example-info { display: flex; flex-direction: column; gap: 3px; }
+    .example-name { font-size: 15px; font-weight: 600; }
+    .example-type { font-size: 12px; color: var(--muted); }
+    .example-link {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    /* PRICING */
+    .price-compare {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .price-row:last-child { border-bottom: none; }
+    .price-row-label { font-size: 14px; color: var(--muted); }
+    .price-row-value { font-size: 14px; font-weight: 600; text-decoration: line-through; opacity: 0.5; }
+    .price-row.highlight { background: rgba(52, 236, 172, 0.06); }
+    .price-row.highlight .price-row-label { color: var(--text); font-weight: 600; font-size: 15px; }
+    .price-row.highlight .price-row-value {
+      text-decoration: none;
+      opacity: 1;
+      color: var(--green);
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .price-detail {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 16px;
+    }
+    .price-detail strong { color: var(--green); }
+
+    .guarantee {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .guarantee-icon { font-size: 22px; flex-shrink: 0; }
+    .guarantee p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+    .guarantee p strong { color: var(--text); display: block; margin-bottom: 3px; }
+
+    /* PROCESS */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+    .step {
+      display: flex;
+      gap: 20px;
+      padding: 0 0 32px 0;
+      position: relative;
+    }
+    .step:last-child { padding-bottom: 0; }
+    .step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+      flex-shrink: 0;
+    }
+    .step-line {
+      width: 2px;
+      flex: 1;
+      background: var(--border);
+      margin-top: 8px;
+    }
+    .step:last-child .step-line { display: none; }
+    .step-content { padding-top: 6px; }
+    .step-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .step-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* CTA FINAL */
+    .cta-final {
+      padding: 64px 24px;
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cta-final h2 {
+      font-size: clamp(28px, 6vw, 44px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .cta-final h2 em { font-style: normal; color: var(--green); }
+    .cta-final p {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    footer strong { color: var(--text); }
+
+    /* DEADLINE BANNER */
+    .deadline {
+      background: rgba(255, 68, 68, 0.08);
+      border: 1px solid rgba(255, 68, 68, 0.2);
+      border-radius: 8px;
+      padding: 14px 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 24px 40px;
+      max-width: 632px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .deadline strong { color: var(--danger); }
+
+    /* INCLUDES LIST */
+    .includes {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .include-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 15px;
+    }
+    .include-check {
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .include-item span { color: var(--muted); line-height: 1.5; }
+    .include-item span strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <span class="nav-logo">Nikato Estudio</span>
+    <span class="nav-badge">Oferta Junio 2026</span>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-eyebrow">Web Express · Paysandú</span>
+    <h1>Tu negocio,<br>online <em>esta semana.</em></h1>
+    <p class="hero-sub">
+      Hacemos tu página web profesional en <strong>48 horas</strong>.<br>
+      Sin vueltas, sin costos de agencia, sin que tengas que saber nada de tecnología.
+    </p>
+    <div class="cta-group">
+      <a href="https://wa.me/59891711034?text=Hola%20Santi%2C%20vi%20la%20propuesta%20de%20web%20express%20y%20me%20interesa" class="btn-primary">
+        Quiero mi web → WhatsApp
+      </a>
+      <a href="https://nikatoestudio.uy" target="_blank" class="btn-secondary">
+        Ver trabajos anteriores
+      </a>
+    </div>
+    <p class="urgency-note">
+      <span>Precio especial cierra el 30 de junio.</span> Quedan pocos lugares este mes.
+    </p>
+  </div>
+
+  <!-- DEADLINE BANNER -->
+  <div class="deadline">
+    ⏱ <strong>Solo junio 2026:</strong> landing web profesional a <strong>USD 100</strong> — precio normal USD 350. Sin letra chica.
+  </div>
+
+  <hr class="divider">
+
+  <!-- PROBLEMA -->
+  <section>
+    <span class="section-label">El problema</span>
+    <h2>¿Tu negocio<br><em>no existe</em> en internet?</h2>
+    <div class="pain-list">
+      <div class="pain-item">
+        <span class="pain-icon">✕</span>
+        <p><strong>Te buscan y no te encuentran</strong>
+        Hoy la primera cosa que hace alguien antes de ir a un lugar es buscarlo en Google. Si no aparecés, perdiste al cliente.</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">✕</span>
+        <p><strong>Tu competencia sí tiene web</strong>
+        Aunque vos seas mejor, si ellos aparecen primero en Google, se llevan la consulta.</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">✕</span>
+        <p><strong>Instagram no reemplaza una web</strong>
+        Una página web da confianza que las redes no dan. Es la diferencia entre parecer un negocio serio y parecer informal.</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">✕</span>
+        <p><strong>Las agencias cobran caro y tardan meses</strong>
+        USD 800, USD 1.200, demoras de 2 meses y un resultado que después tenés que pagarle a alguien para mantener.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- EJEMPLOS -->
+  <section>
+    <span class="section-label">Trabajos reales</span>
+    <h2>Lo que hacemos,<br><em>ya lo podés ver.</em></h2>
+    <p style="color: var(--muted); font-size: 15px; margin-bottom: 28px; line-height: 1.7;">
+      Algunos sitios reales hechos por Nikato Estudio. Tu página quedaría a este nivel, adaptada a tu rubro y tu marca.
+    </p>
+    <div class="examples-grid">
+      <a href="https://nikatoestudio.uy" target="_blank" class="example-card">
+        <div class="example-info">
+          <span class="example-name">Nikato Estudio</span>
+          <span class="example-type">Agencia · Marketing digital</span>
+        </div>
+        <span class="example-link">Ver sitio →</span>
+      </a>
+      <a href="https://cfstudio.uy" target="_blank" class="example-card">
+        <div class="example-info">
+          <span class="example-name">C&F Studio</span>
+          <span class="example-type">Fotografía y videografía</span>
+        </div>
+        <span class="example-link">Ver sitio →</span>
+      </a>
+      <a href="https://vrum.nikatoestudio.uy" target="_blank" class="example-card">
+        <div class="example-info">
+          <span class="example-name">Vrüm</span>
+          <span class="example-type">SaaS · Gestión de automotoras</span>
+        </div>
+        <span class="example-link">Ver sitio →</span>
+      </a>
+      <div class="example-card" style="opacity: 0.5; cursor: default; pointer-events: none;">
+        <div class="example-info">
+          <span class="example-name">Y muchos más...</span>
+          <span class="example-type">Restaurantes · Gimnasios · Comercios · Servicios</span>
+        </div>
+        <span class="example-link" style="color: var(--muted);">Consultanos →</span>
+      </div>
+    </div>
+    <p style="font-size: 13px; color: var(--muted); margin-top: 20px; line-height: 1.6;">
+      Somos de Paysandú. Conocemos el mercado local y trabajamos con negocios de la zona.
+    </p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- QUÉ INCLUYE -->
+  <section>
+    <span class="section-label">Qué incluye</span>
+    <h2>Una web que<br>trabaja <em>por vos.</em></h2>
+    <div class="includes">
+      <div class="include-item">
+        <span class="include-check">✓</span>
+        <span><strong>Diseño profesional a medida</strong> — adaptado a tus colores, tu logo y tu rubro. No es una plantilla genérica.</span>
+      </div>
+      <div class="include-item">
+        <span class="include-check">✓</span>
+        <span><strong>Optimizada para celular</strong> — el 80% de las búsquedas son desde el teléfono.</span>
+      </div>
+      <div class="include-item">
+        <span class="include-check">✓</span>
+        <span><strong>Botón de WhatsApp directo</strong> — el cliente te contacta en un tap.</span>
+      </div>
+      <div class="include-item">
+        <span class="include-check">✓</span>
+        <span><strong>Aparecés en Google</strong> — configuramos el SEO básico para que te encuentren.</span>
+      </div>
+      <div class="include-item">
+        <span class="include-check">✓</span>
+        <span><strong>Carga rápida</strong> — los sitios lentos pierden clientes. El tuyo va a cargar en segundos.</span>
+      </div>
+      <div class="include-item">
+        <span class="include-check">✓</span>
+        <span><strong>Lista en 48 horas</strong> — sin esperas de meses. Confirmás hoy, en dos días tenés tu web.</span>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="price-compare">
+      <div class="price-row">
+        <span class="price-row-label">Agencia tradicional</span>
+        <span class="price-row-value">USD 600–1.200</span>
+      </div>
+      <div class="price-row">
+        <span class="price-row-label">Freelancer promedio</span>
+        <span class="price-row-value">USD 250–400</span>
+      </div>
+      <div class="price-row highlight">
+        <span class="price-row-label">Nikato Express · Junio 2026</span>
+        <span class="price-row-value">USD 100</span>
+      </div>
+    </div>
+
+    <p class="price-detail">
+      Precio en dólares, se abona una sola vez — cuando te entregamos la web terminada y aprobada.
+      El hosting y dominio van aparte (te lo dejamos configurado y andando, vos lo pagás directo al proveedor).
+      Si después querés agregar más páginas, tienda online o funciones especiales, lo cotizamos aparte — sin compromiso.
+      <br><br>
+      <strong>Este precio es solo para junio.</strong> Desde julio vuelve al precio normal.
+    </p>
+
+    <div class="guarantee">
+      <span class="guarantee-icon">🛡️</span>
+      <p>
+        <strong>Sin riesgo: pagás cuando recibís.</strong>
+        Te mostramos la web terminada antes de cobrar. Si el resultado no te convence, no pagás nada. Solo abonás cuando estás conforme con lo que recibís.
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- PROCESO -->
+  <section>
+    <span class="section-label">Cómo funciona</span>
+    <h2>Tres pasos y<br><em>listo.</em></h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <p class="step-title">Me escribís por WhatsApp</p>
+          <p class="step-desc">Me contás brevemente a qué se dedica tu negocio. Con eso ya puedo arrancar. No necesito que prepares nada especial.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <p class="step-title">Te muestro un avance en 24 horas</p>
+          <p class="step-desc">Diseñamos la web adaptada a tu marca. Antes de publicar te la muestro y ajustamos lo que quieras.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left">
+          <div class="step-num">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <p class="step-title">Tu web online en 48 horas</p>
+          <p class="step-desc">Aprobás, publicamos, y tu negocio ya aparece en internet. Así de simple.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- CTA FINAL -->
+  <div class="cta-final">
+    <h2>Tu negocio online<br><em>esta semana.</em></h2>
+    <p>
+      Si estás leyendo esto, ya sabés que necesitás una web.<br>
+      El único paso que falta es escribirme.
+    </p>
+    <div class="cta-group">
+      <a href="https://wa.me/59891711034?text=Hola%20Santi%2C%20vi%20la%20propuesta%20de%20web%20express%20y%20me%20interesa" class="btn-primary">
+        Escribirme por WhatsApp →
+      </a>
+      <a href="https://nikatoestudio.uy" target="_blank" class="btn-secondary">
+        Conocer más sobre Nikato
+      </a>
+    </div>
+    <p class="urgency-note" style="margin-top: 24px;">
+      <span>Precio especial cierra el 30 de junio.</span><br>
+      Santi Caccia · Nikato Estudio · Paysandú, Uruguay
+    </p>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <strong>Nikato Estudio</strong><br>
+    Marketing digital · Branding · Automatización con IA<br>
+    Paysandú, Uruguay · <a href="https://nikatoestudio.uy" style="color: var(--green);">nikatoestudio.uy</a>
+  </footer>
+
+</body>
+</html>
